@@ -13,9 +13,14 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^26.2.0",
+    "@types/pg": "^8.21.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.12",
     "tsx": "^4.23.11",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "pg": "^8.23.0"
   }
 }
