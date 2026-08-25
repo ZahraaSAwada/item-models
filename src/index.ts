@@ -1,11 +1,36 @@
-import { Cake } from "./models/Cake.model";
-import { Book } from "./models/Book.model";
-import { Toy } from "./models/Toy.model";
+// src/index.ts
+import express, { NextFunction, Request, Response } from "express";
+import analyticsRoutes from "./route/analytics.route";
+import { HttpException } from "./util/exceptions/HttpException";
 
-const cake = new Cake("Birthday", "Chocolate", "Cream", 3, 2);
-const book = new Book("Paperback", "1984", "George Orwell", "Dystopian", 328, 15);
-const toy = new Toy("Action Figure", "China", 25, 10, 6);
+const app = express();
 
-console.log(cake.getFlavor(), "-", cake.getCategory());
-console.log(book.getTitle(), "-", book.getCategory());
-console.log(toy.getType(), "-", toy.getCategory());
+// Parse incoming JSON request bodies
+app.use(express.json());
+
+// Mount the analytics routes under the /analytics prefix
+app.use("/analytics", analyticsRoutes);
+
+// 404 handler — for any request that matched no route above
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ message: "Not Found" });
+});
+
+// Global error handler — catches everything forwarded by asyncHandler
+app.use(
+  (err: Error, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof HttpException) {
+      res.status(err.status).json({
+        message: err.message,
+        details: err.details || undefined,
+      });
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+);
+
+const PORT = 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

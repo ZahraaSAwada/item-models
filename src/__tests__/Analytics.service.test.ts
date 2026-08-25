@@ -1,5 +1,5 @@
 // src/__tests__/Analytics.service.test.ts
-import { AnalyticsService } from "../service/Analytics.service";
+import { AnalyticsService } from "../services/Analytics.service";
 import { Order } from "../models/Order.model";
 import { Cake } from "../models/Cake.model";
 import { Book } from "../models/Book.model";
