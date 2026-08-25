@@ -27,7 +27,7 @@ export class AnalyticsService {
     };
 
     for (const order of orders) {
-      const category = order.getItem().getCategory();
+      const category = (order.getItem() as any).category as ItemCategory;
       counts[category] += 1;
     }
 
@@ -57,7 +57,7 @@ export class AnalyticsService {
     };
 
     for (const order of orders) {
-      const category = order.getItem().getCategory();
+      const category = (order.getItem() as any).category as ItemCategory;
       revenue[category] += order.getPrice() * order.getQuantity();
     }
 
