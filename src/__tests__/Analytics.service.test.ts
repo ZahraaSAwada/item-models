@@ -1,9 +1,7 @@
 // src/__tests__/Analytics.service.test.ts
 import { AnalyticsService } from "../services/Analytics.service";
 import { Order } from "../models/Order.model";
-import { Cake } from "../models/Cake.model";
-import { Book } from "../models/Book.model";
-import { Toy } from "../models/Toy.model";
+import { ItemCategory } from "../models/Item.model";
 
 describe("AnalyticsService", () => {
   // A helper that builds a fake repository returning the orders we give it.
@@ -14,9 +12,10 @@ describe("AnalyticsService", () => {
   };
 
   // Some sample orders we'll reuse across tests.
-  const cakeOrder = new Order(new Cake("Birthday", "Chocolate", "Vanilla", 12, 3), 100, 2);
-  const bookOrder = new Order(new Book("Dune", "Herbert", "SciFi", 400, 20), 20, 5);
-  const toyOrder  = new Order(new Toy("Lego", "Denmark", 50, 30, 8), 50, 1);
+  // Sample orders using plain-data items, matching what the database returns.
+    const cakeOrder = new Order({ category: ItemCategory.CAKE } as any, 100, 2);
+    const bookOrder = new Order({ category: ItemCategory.BOOK } as any, 20, 5);
+    const toyOrder  = new Order({ category: ItemCategory.TOY } as any, 50, 1);;
 
   it("getTotalOrders returns the number of orders", async () => {
     const service = new AnalyticsService(makeMockRepo([cakeOrder, bookOrder, toyOrder]));

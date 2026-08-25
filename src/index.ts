@@ -2,6 +2,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import analyticsRoutes from "./route/analytics.route";
 import { HttpException } from "./util/exceptions/HttpException";
+import { OrderRepository } from "./repository/Order.repository";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use((req: Request, res: Response) => {
 // Global error handler — catches everything forwarded by asyncHandler
 app.use(
   (err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.log("ACTUAL ERROR:", err); 
     if (err instanceof HttpException) {
       res.status(err.status).json({
         message: err.message,
@@ -31,6 +33,16 @@ app.use(
 );
 
 const PORT = 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+
+async function startServer() {
+  // Ensure the orders table exists before we start serving requests.
+  const orderRepository = new OrderRepository();
+  await orderRepository.init();
+  await orderRepository.closePool();
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+}
+
+startServer();
